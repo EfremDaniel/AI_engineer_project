@@ -1,26 +1,38 @@
 from pydantic import BaseModel, Field
+from typing import List, Optional
 from lancedb.embeddings import get_registry
 from lancedb.pydantic import LanceModel, Vector
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 
 load_dotenv()
-embedding_model = get_registry().get("gemini-text").create(name="gemini-embedding-001")
 
-EMBEDDING_DIM = 3072
+embedding_model = get_registry().get("gemini-text").create(name= "gemini-embedding-001")
+
+EMBEDDINNG_DIM = 3072
 
 
-class Article(LanceModel):
+class TranScript(LanceModel):
     doc_id: str
-    filepath: str
-    filename: str = Field(description="the stem of the file i.e. without the suffix")
+    filepath: str 
+    filename: str = Field(description="the stem of the file, i. e without the suffix ")
     content: str = embedding_model.SourceField()
-    embedding: Vector(EMBEDDING_DIM) = embedding_model.VectorField()
+    embedding: Vector(EMBEDDINNG_DIM) = embedding_model.VectorField()
+    
+# class RagResponse(BaseModel):
+#     filename: str = Field(description="filename of retrieved filepath without suffix")
+#     filepath: str = Field(description= "absolute path to retrieved file")
+#     answer: str = Field(description="answer based retrieved file")
+    
+    
+# class History(BaseModel):
+#     role: str 
+#     content: str 
 
+# class Prompt(BaseModel):
+#     prompt: str = Field(description="prompt from user")
+#     history: Optional[List[History]]
+    
 
-class Prompt(BaseModel):
-    prompt: str = Field(description="prompt from user, if empty consider prompt as missing")
-
-class RagResponse(BaseModel):
-    filename: str = Field(description="filename of the retrieved file without suffix")
-    filepath: str = Field(description="absolute path to the retrieved file")
-    answer: str = Field(description="answer based on the retrieved file")
+# class YoutubeDescription(BaseModel):
+#     doc_id: str = Field(description="Id for the video, is the same as filepath")
+#     description: str = Field(description= "Short summaries for the video")
