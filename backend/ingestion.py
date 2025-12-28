@@ -31,4 +31,4 @@ def ingest_docs_to_vectordb(table):
 
 if __name__ == "__main__":
     vector_db = setup_vector_dabase(VECTOR_DATABASE_PATH)
-    ingest_docs_to_vectordb(vector_db["transcript"])
+    ingest_docs_to_vectordb(vector_db["YouTube"])

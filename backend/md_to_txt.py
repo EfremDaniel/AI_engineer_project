@@ -23,16 +23,17 @@ def convert_md_txt(md_path):
 
 
 def export_text_to_txt(text, path_file):
-    with open(path_file, "w", encoding="utf-8") as file:
-        file.write(text)
+    
+    with open(path_file, "w", encoding= "utf-8") as f:
+        f.write(text)
 
-if __name__=='__name__':
+if __name__=="__main__":
     for md_path in DATA_PATH.glob("*.md"):
-        md_text =  remove_any_duplicates(md_path)
+        md_text =  convert_md_txt(md_path)
         
         filename = f"{md_path.stem.casefold()}.txt"
-    
-    export_text_to_txt(md_text, DATA_PATH / filename)
+        
+        export_text_to_txt(text= md_text, path_file= DATA_PATH/filename)
 
 
 
