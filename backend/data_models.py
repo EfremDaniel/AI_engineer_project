@@ -18,21 +18,11 @@ class TranScript(LanceModel):
     content: str = embedding_model.SourceField()
     embedding: Vector(EMBEDDINNG_DIM) = embedding_model.VectorField()
     
-# class RagResponse(BaseModel):
-#     filename: str = Field(description="filename of retrieved filepath without suffix")
-#     filepath: str = Field(description= "absolute path to retrieved file")
-#     answer: str = Field(description="answer based retrieved file")
     
-    
-# class History(BaseModel):
-#     role: str 
-#     content: str 
+class Prompt(BaseModel):
+    prompt: str = Field(description="prompt from user, if empty consider it as missing")
 
-# class Prompt(BaseModel):
-#     prompt: str = Field(description="prompt from user")
-#     history: Optional[List[History]]
-    
-
-# class YoutubeDescription(BaseModel):
-#     doc_id: str = Field(description="Id for the video, is the same as filepath")
-#     description: str = Field(description= "Short summaries for the video")
+class RagResponse(BaseModel):
+    filename: str = Field(description="filename of retrived file without suffix")
+    filepath: str = Field(description="absolute path to the retrived file")
+    answer: str = Field(description="answer based on retrived file")
