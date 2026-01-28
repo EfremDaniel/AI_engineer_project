@@ -1,43 +1,48 @@
 import streamlit as st
 import requests
 from pathlib import Path
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 ASSETS_PATH = Path(__file__).absolute().parents[1] / "assets"
 
-url = f"https://ragbit.azurewebsites.net/rag/query?code={os.getenv('FUNCTION_APP_API')}"
-
-
-
 def layout():
-    st.title("Youtube Bot")
-    st.caption("Ask a question about different the youtube videos")
-    st.session_state.setdefault(
-        "messages", [{"role": "assistant", "content": "How can I help you?"}]
-    )
 
-    for message in st.session_state.messages:
-        st.chat_message(message["role"]).write(message["content"])
+    st.markdown("# Chatube")
+    st.markdown("Ask a question regarding data engineering")
+    text_input = st.text_input(label="Ask a questions, see if you get an answer =)")
 
-    user_prompt = st.chat_input("Ask me a question")
-    if user_prompt:
-        st.session_state.messages.append({"role": "user", "content": user_prompt})
-        st.chat_message("user").write(user_prompt)
+    if st.button("Send") and text_input.strip() != "":
+        response = requests.post(
+            "http://127.0.0.1:8000/rag/query",
+            json={"prompt": text_input}
+        )
 
-        response = requests.post(url, json={"prompt": user_prompt})
-        response.raise_for_status()
-        data = response.json()
-        answer = data.get("answer")
-        source = data.get("filepath")
+        if response.status_code != 200:
+            st.error(f"Backend error: {response.status_code}")
+            st.text(response.text)
+            return
 
-        st.session_state.messages.append({"role": "assistant", "content": answer})
-        with st.chat_message("assistant"):
-            st.write(answer)
-            if source:
-                st.caption(f"Source: {source}")
+        try:
+            data = response.json()
+        except ValueError:
+            st.error("Response is not valid JSON")
+            st.text(response.text)
+            return
+
+      # Output section
+        st.divider()
+
+        with st.container():
+            st.markdown("### Question")
+            st.info(text_input)
+
+            st.markdown("### Answer")
+            st.success(data.get("answer", "No answer returned"))
+
+            filepath = data.get("filepath")
+            if filepath:
+                st.markdown("### Source")
+                st.code(filepath, language="text")
+
 
 
 if __name__ == "__main__":

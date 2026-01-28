@@ -9,8 +9,8 @@
     }
   },
   "extensions": {
-  "http": {
-    "routePrefix": ""
+    "http": {
+      "routePrefix": ""
     }
   },
   "extensionBundle": {
