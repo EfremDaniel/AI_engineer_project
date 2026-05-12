@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
 from lancedb.embeddings import get_registry
 from lancedb.pydantic import LanceModel, Vector
 from dotenv import load_dotenv
